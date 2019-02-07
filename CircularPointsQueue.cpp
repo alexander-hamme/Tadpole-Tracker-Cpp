@@ -73,11 +73,17 @@ void CircularPointsQueue::toString() {
 
 	unsigned idx = front;
 
-	cout << "Elements:\t";
+	cout << "Elements:\t[";
 
 	if (! atCapacity) {
 		while(idx <= rear) {
-			printf("(%d,%d)\t", elements.at(idx).x, elements.at(idx).y);
+
+			printf("(%d,%d)", elements.at(idx).x, elements.at(idx).y);
+
+			if (idx != rear) {
+				cout << ", ";
+			}
+
 			idx++;
 		}
 	} else {
@@ -85,16 +91,21 @@ void CircularPointsQueue::toString() {
 		while (idx != rear) {
 			//std::cout << "Idx is " << idx << "\t";
 
-			printf("(%d,%d)\t", elements.at(idx).x, elements.at(idx).y);
+			printf("(%d,%d)", elements.at(idx).x, elements.at(idx).y);
+
+			if (idx != rear) {
+				cout << ", ";
+			}
+
 			idx = (idx + 1) % capacity;
 
 			if (idx == rear) {
-				printf("(%d,%d)\t", elements.at(idx).x, elements.at(idx).y);
+				printf("(%d,%d)", elements.at(idx).x, elements.at(idx).y);
 				break;
 			}
 		}
 	}
-	cout << endl;
+	cout << "]" << endl;
 }
 
 int CircularPointsQueue::getFront() {
