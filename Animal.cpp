@@ -3,7 +3,7 @@
 //
 
 #include "Animal.h"
-#include "CircularPointsQueue.cpp"
+//#include "CircularPointsQueue.cpp"
 
 #include <iostream>
 #include <vector>
@@ -21,7 +21,6 @@ class Animal {
 		void updateLocation(int _x, int _y, double dt, long timePos);
 
 
-
 	private:
 
 		void applyBounds();
@@ -30,7 +29,7 @@ class Animal {
 
 		vector<double[]> dataPoints;
 
-		CircularPointsQueue linePoints; //<int[]>
+		//CircularPointsQueue linePoints; //<int[]>
 
 
 };
