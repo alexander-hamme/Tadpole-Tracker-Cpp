@@ -4,53 +4,59 @@
 
 #ifndef SPROJ_CPP_CIRCULARPOINTSQUEUE_H
 #define SPROJ_CPP_CIRCULARPOINTSQUEUE_H
-
-#endif //SPROJ_CPP_CIRCULARPOINTSQUEUE_H
-
+#endif
 
 #include <vector>
 
 using namespace std;
+
 
 typedef struct {
 	int x;
 	int y;
 } Point;
 
-
+/**
+ * This class will be used for drawing trailing trajectories
+ * in a graphics window using a vector of line points.
+ *
+ * Accessing the points will be done with a First In First Out (FIFO)
+ * style traversal from `front` circularly around the array
+ * until it reaches `rear`
+ */
 class CircularPointsQueue {
 
 private:
 
-	//static const int capacity = 30;
-	//enum{capacity = 30};
+	const int capacity;
 
-	const unsigned capacity;
 	vector<Point> elements;
 
+	// elements will be inserted into array starting at the end,
+	// right to left. This allows simple FIFO traversal by traversing
+	// circularly around the array from `front` to `rear`.
 
-	// insert elements into array starting at end and working left
-	// this allows FIFO traversal by traveling to the right from
-	// Front to Rear. (circularly traversing the array)
-	unsigned front = capacity;
+	int front = capacity;    // this is decremented by 1 before first insertion
 
-	// stays outside range until the queue reaches full capacity,
-	// at which point it is 1 behind front
-	unsigned rear = capacity-1;
-
+	int rear = capacity-1;   // rear stays at first insertion until queue reaches full capacity
 
 	bool atCapacity = false;
 
 public:
 
-	explicit CircularPointsQueue(unsigned cap): capacity(cap), elements(static_cast<unsigned long>(cap))
-	{
-	};
+	explicit CircularPointsQueue(int cap)   // initialize vector with capacity
+	: capacity(cap), elements(static_cast<unsigned int>(cap)) {};
 
 	bool add(Point pt);
 
 	int getFront();
 	int getRear();
+	int getSize();
+
+	bool isAtCapacity();
+	bool isEmpty();
+
+	vector<Point> getElements();
 
 	void toString();
 };

@@ -8,21 +8,9 @@
 
 using namespace std;
 
-/**
- * This class will be used for drawing trailing trajectories
- * using a vector of line points.
- *
- * Accessing the points will be done using a FIFO style traversal
- * from Front backwards to Rear
- */
 
 /*
-CircularPointsQueue::CircularPointsQueue(unsigned cap)
-	: capacity(cap), elements(static_cast<unsigned long>(cap)){
-}*/
-
-/*
- * Adds the given element to this queue. If the queue is full,
+ * Adds the given element to the queue. If the queue is full,
  * the least recently added element is discarded
  * so that a new element can be inserted.
  */
@@ -58,24 +46,51 @@ bool CircularPointsQueue::add(Point pt) {
 	std::cout << "Front is " << front << std::endl;
 	std::cout << "Rear is " << rear << std::endl;
 
-	elements.at(front) = pt;
-
-
-	this->toString();
+	// at() has automatic bounds checking, as opposed to using the [] operator
+	elements.at(static_cast<unsigned int>(front)) = pt;
 
 	cout << endl;
 
 	// todo check for success
-	return false;
+	return true;
 }
 
+vector<Point> CircularPointsQueue::getElements() {
+	return this->elements;
+}
+
+int CircularPointsQueue::getSize() {
+	return this->capacity;
+}
+
+bool CircularPointsQueue::isAtCapacity() {
+	return this->atCapacity;
+}
+
+bool CircularPointsQueue::isEmpty() {
+	return this->elements.empty();
+}
+
+int CircularPointsQueue::getFront() {
+	return this->front;
+}
+
+int CircularPointsQueue::getRear() {
+	return this->rear;
+}
+
+
+/*
+ * Print out elements in FIFO order
+ */
 void CircularPointsQueue::toString() {
 
-	unsigned idx = front;
+	auto idx = static_cast<unsigned int>(front);
 
 	cout << "Elements:\t[";
 
 	if (! atCapacity) {
+
 		while(idx <= rear) {
 
 			printf("(%d,%d)", elements.at(idx).x, elements.at(idx).y);
@@ -86,10 +101,10 @@ void CircularPointsQueue::toString() {
 
 			idx++;
 		}
+
 	} else {
 
 		while (idx != rear) {
-			//std::cout << "Idx is " << idx << "\t";
 
 			printf("(%d,%d)", elements.at(idx).x, elements.at(idx).y);
 
@@ -107,13 +122,3 @@ void CircularPointsQueue::toString() {
 	}
 	cout << "]" << endl;
 }
-
-int CircularPointsQueue::getFront() {
-	return this->front;
-}
-
-int CircularPointsQueue::getRear() {
-	return this->rear;
-}
-
-

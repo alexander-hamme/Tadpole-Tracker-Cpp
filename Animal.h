@@ -18,3 +18,33 @@
 
 #define DATA_BUFFER_ARRAY_SIZE = 60
 
+#include <iostream>
+
+using namespace std;
+
+class Animal {
+
+public:
+
+	Animal(int _x, int _y, int pos_bounds[4], int clr[3]);
+
+	string toString();
+
+	void updateLocation(int _x, int _y, double dt, long timePos);
+
+private:
+
+	int x, y;
+
+	int color[3];
+	int position_bounds[4];
+
+	void applyBounds();
+
+	void updateVelocity(double dt);
+
+	vector<double[]> dataPoints;
+
+	//CircularPointsQueue linePoints; //<int[]>
+};
+
