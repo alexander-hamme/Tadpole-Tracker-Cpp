@@ -43,7 +43,7 @@ private:
 
 	void updateVelocity(double dt);
 
-	vector<double[]> dataPoints;
+	//vector<double[]> dataPoints;
 
 	//CircularPointsQueue linePoints; //<int[]>
 };

@@ -60,7 +60,7 @@ vector<Point> CircularPointsQueue::getElements() {
 }
 
 int CircularPointsQueue::getSize() {
-	return this->capacity;
+	return (atCapacity) ? this->capacity : (rear+1 - front);
 }
 
 bool CircularPointsQueue::isAtCapacity() {
