@@ -9,16 +9,74 @@
 
 using namespace std;
 
+/**
+ * Simple test where queue has not reached capacity
+ */
+TEST(testQueueElements, UnderCapacityCheck) {
 
-TEST(testQueueElements, SimpleTestElements) {
+	unsigned numbpts = 10;
 
-	auto *pointsQueue = new CircularPointsQueue(10);
+	auto *pointsQueue = new CircularPointsQueue(numbpts + 5);
 
-	vector<Point> truthPoints(10);
+	vector<Point> truthPoints(numbpts);
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < numbpts; i++) {
 		Point pt = {i, i};
 		pointsQueue->add(pt);
+		truthPoints.push_back(pt);
+	}
+
+	EXPECT_TRUE(testQueueElements(pointsQueue, truthPoints));
+
+	delete pointsQueue;
+}
+
+
+
+/**
+ * Test where queue is at capacity
+ * (tests circular traversal of queue)
+ */
+TEST(testQueueElements, AtCapacityCheck) {
+
+	unsigned numbpts = 10;
+
+	auto *pointsQueue = new CircularPointsQueue(numbpts);
+
+	vector<Point> truthPoints(numbpts);
+
+	for (int i = 0; i < numbpts; i++) {
+		Point pt = {i, i};
+		pointsQueue->add(pt);
+		truthPoints.push_back(pt);
+	}
+
+	EXPECT_TRUE(testQueueElements(pointsQueue, truthPoints));
+
+	delete pointsQueue;
+}
+
+
+/**
+ * Test where points are added to queue after it has reached capacity
+ *
+ * (this is to check that FIFO traversal gives the correct order)
+ */
+TEST(testQueueElements, OverCapacityCheck) {
+
+	unsigned numbpts = 10;
+
+	auto *pointsQueue = new CircularPointsQueue(numbpts);
+
+	vector<Point> truthPoints(numbpts);
+
+	for (int i = 0; i < numbpts * 2; i++) {
+		Point pt = {i, i};
+		pointsQueue->add(pt);
+	}
+
+	for (int i=numbpts * 2 - 1; i>=numbpts; i--) {
+		Point pt = {i, i};
 		truthPoints.push_back(pt);
 	}
 
@@ -127,37 +185,7 @@ bool testQueueElements(CircularPointsQueue *queue, vector<Point> truthPoints) {
 	return true;
 }
 
-/**
- * Simple test with queue under capacity
- * @return
- */
-bool simpleTest() {
 
-	int numbpts = 10;
-
-	auto *pointsQueue = new CircularPointsQueue(numbpts + 5);
-
-	vector<Point> truthPoints(numbpts);
-
-	for (int i = 0; i < numbpts; i++) {
-		Point pt = {i, i};
-		pointsQueue->add(pt);
-		truthPoints.push_back(pt);
-	}
-
-	bool passed = testQueueElements(pointsQueue, truthPoints);
-
-	delete pointsQueue;
-
-	return passed;
-
-}
-
-//void runAllTests() {
-//
-//	simpleTest();
-//
-//}
 
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);
