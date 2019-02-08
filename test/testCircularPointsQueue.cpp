@@ -27,7 +27,14 @@ TEST(testQueueElements, SimpleTestElements) {
 	delete pointsQueue;
 }
 
-
+/**
+ * Checks if all Point structs in the queue are equal
+ * (have the same x and y values) to those in truthPoints vector
+ *
+ * @param queue pointer to a CircularPointsQueue object
+ * @param truthPoints vector containing Point structs
+ * @return bool
+ */
 bool testQueueElements(CircularPointsQueue *queue, vector<Point> truthPoints) {
 
 	if (queue->getSize() != truthPoints.size()) {
@@ -120,14 +127,19 @@ bool testQueueElements(CircularPointsQueue *queue, vector<Point> truthPoints) {
 	return true;
 }
 
-
+/**
+ * Simple test with queue under capacity
+ * @return
+ */
 bool simpleTest() {
 
-	auto *pointsQueue = new CircularPointsQueue(10);
+	int numbpts = 10;
 
-	vector<Point> truthPoints(10);
+	auto *pointsQueue = new CircularPointsQueue(numbpts + 5);
 
-	for (int i = 0; i < 10; i++) {
+	vector<Point> truthPoints(numbpts);
+
+	for (int i = 0; i < numbpts; i++) {
 		Point pt = {i, i};
 		pointsQueue->add(pt);
 		truthPoints.push_back(pt);
