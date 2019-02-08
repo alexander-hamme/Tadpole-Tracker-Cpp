@@ -5,9 +5,9 @@
 
 
 
-int main() {
+int main1() {
 
-	runAllTests();
+	//runAllTests();
 
 	return 0;
 }

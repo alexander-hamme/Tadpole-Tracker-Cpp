@@ -83,12 +83,15 @@ int CircularPointsQueue::getRear() {
 /*
  * Print out elements in FIFO order
  */
-void CircularPointsQueue::toString() {
+void CircularPointsQueue::printPoints() {
 
 	auto idx = static_cast<unsigned int>(front);
 
 	cout << "Elements:\t[";
 
+	// if queue is not at capacity, FIFO traversal is simple,
+	// because elements are inserted in reverse order into the array.
+	// Accessing elements in FIFO order is done by incrementing `front` to `rear`
 	if (! atCapacity) {
 
 		while(idx <= rear) {
@@ -104,6 +107,12 @@ void CircularPointsQueue::toString() {
 
 	} else {
 
+		// if queue is at capacity, `front` is incremented circularly around
+		// the array until it reaches `rear`.
+
+		// one extra check must be included for when front reaches
+		// (is equal to) rear, because rear is always at the last element
+		// (in FIFO order) in the array
 		while (idx != rear) {
 
 			printf("(%d,%d)", elements.at(idx).x, elements.at(idx).y);

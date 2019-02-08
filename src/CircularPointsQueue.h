@@ -58,5 +58,5 @@ public:
 
 	vector<Point> getElements();
 
-	void toString();
+	void printPoints();
 };
