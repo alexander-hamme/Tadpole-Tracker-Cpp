@@ -21,8 +21,8 @@ bool CircularPointsQueue::add(Point pt) {
 
 	if (front == 0) {
 
-		// this stays true once queue reaches capacity for the first time
-		atCapacity = true;
+		atCapacity = true;  // this stays true once queue reaches capacity for the first time,
+							// because deleting or popping elements from the line points queue is not supported
 
 		front = capacity - 1;
 		rear = capacity - 2;
