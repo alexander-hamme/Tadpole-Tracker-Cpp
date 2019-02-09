@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "testCircularPointsQueue.h"
+#include "testCircularPointsQueue.hpp"
 
 #include "gtest/gtest.h"
 

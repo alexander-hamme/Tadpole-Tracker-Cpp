@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <vector>
-#include "CircularPointsQueue.h"
+#include "CircularPointsQueue.hpp"
 
 using namespace std;
 
