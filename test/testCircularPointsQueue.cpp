@@ -9,6 +9,14 @@
 
 using namespace std;
 
+
+
+int main(int argc, char **argv) {
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
+}
+
+
 /**
  * Simple test where queue has not reached capacity
  */
@@ -183,11 +191,4 @@ bool testQueueElements(CircularPointsQueue *queue, vector<Point> truthPoints) {
 		return false;
 	}
 	return true;
-}
-
-
-
-int main(int argc, char **argv) {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
 }
