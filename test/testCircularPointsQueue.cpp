@@ -10,7 +10,6 @@
 using namespace std;
 
 
-
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
@@ -20,7 +19,7 @@ int main(int argc, char **argv) {
 /**
  * Simple test where queue has not reached capacity
  */
-TEST(testQueueElements, UnderCapacityCheck) {
+TEST(TEST_Q_ELEMENTS, UnderCapacityCheck) {
 
 	unsigned numbpts = 10;
 
@@ -31,7 +30,7 @@ TEST(testQueueElements, UnderCapacityCheck) {
 	for (int i = 0; i < numbpts; i++) {
 		Point pt = {i, i};
 		pointsQueue->add(pt);
-		truthPoints.push_back(pt);
+		truthPoints.at(numbpts - i - 1) = pt;
 	}
 
 	EXPECT_TRUE(testQueueElements(pointsQueue, truthPoints));
@@ -45,7 +44,7 @@ TEST(testQueueElements, UnderCapacityCheck) {
  * Test where queue is at capacity
  * (tests circular traversal of queue)
  */
-TEST(testQueueElements, AtCapacityCheck) {
+TEST(TEST_Q_ELEMENTS, AtCapacityCheck) {
 
 	unsigned numbpts = 10;
 
@@ -56,7 +55,7 @@ TEST(testQueueElements, AtCapacityCheck) {
 	for (int i = 0; i < numbpts; i++) {
 		Point pt = {i, i};
 		pointsQueue->add(pt);
-		truthPoints.push_back(pt);
+		truthPoints.at(numbpts - i - 1) = pt;
 	}
 
 	EXPECT_TRUE(testQueueElements(pointsQueue, truthPoints));
@@ -70,7 +69,7 @@ TEST(testQueueElements, AtCapacityCheck) {
  *
  * (this is to check that FIFO traversal gives the correct order)
  */
-TEST(testQueueElements, OverCapacityCheck) {
+TEST(TEST_Q_ELEMENTS, OverCapacityCheck) {
 
 	unsigned numbpts = 10;
 
@@ -83,9 +82,10 @@ TEST(testQueueElements, OverCapacityCheck) {
 		pointsQueue->add(pt);
 	}
 
+	size_t j = 0;
 	for (int i=numbpts * 2 - 1; i>=numbpts; i--) {
 		Point pt = {i, i};
-		truthPoints.push_back(pt);
+		truthPoints.at(j++) = pt;
 	}
 
 	EXPECT_TRUE(testQueueElements(pointsQueue, truthPoints));
@@ -109,9 +109,13 @@ bool testQueueElements(CircularPointsQueue *queue, vector<Point> truthPoints) {
 
 		queue->printPoints();
 
+		cout << endl;
+
 		for (Point pt : truthPoints) {
 			printf("(%d, %d)", pt.x, pt.y);
 		}
+
+		cout << endl;
 
 		return false;
 	}
@@ -185,9 +189,15 @@ bool testQueueElements(CircularPointsQueue *queue, vector<Point> truthPoints) {
 
 		queue->printPoints();
 
+		cout << endl;
+
+
 		for (Point pt : truthPoints) {
 			printf("(%d, %d) ", pt.x, pt.y);
 		}
+
+		cout << endl;
+
 		return false;
 	}
 	return true;

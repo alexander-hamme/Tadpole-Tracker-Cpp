@@ -43,13 +43,11 @@ bool CircularPointsQueue::add(Point pt) {
 		}
 	}
 
-	std::cout << "Front is " << front << std::endl;
-	std::cout << "Rear is " << rear << std::endl;
+//	std::cout << "Front is " << front << std::endl;
+//	std::cout << "Rear is " << rear << std::endl;
 
 	// at() has automatic bounds checking, as opposed to using the [] operator
 	elements.at(static_cast<unsigned int>(front)) = pt;
-
-	cout << endl;
 
 	// todo check for success
 	return true;
