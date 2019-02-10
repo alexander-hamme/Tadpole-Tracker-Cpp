@@ -38,9 +38,6 @@ public:
 		bot_right_y(center_pos[1] + (int) round(height / 2.0))
 		{};
 
-	// these functions are just defined here in this header file because they are simple,
-	// and as member functions inside a class, they are implicitly inline and therefore
-	// will not break the one-definition-rule.
 	bool contains(const int pt[2]) {
 		return pt[0] >= this->top_left_x && pt[0] <= this->bot_right_x
 		    && pt[1] >= this->top_left_y && pt[1] <= this->bot_right_y;

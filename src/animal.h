@@ -7,7 +7,7 @@
 #endif
 
 #include <iostream>
-#include "util/circular_queue.h"
+#include "util/circular_buffer.h"
 
 
 using namespace std;
@@ -64,7 +64,7 @@ private:
 
 	vector<double[3]> data_points;
 
-	CircularQueue line_points_q = CircularQueue(line_points_size);
+	CircularBuffer line_points_q = CircularBuffer(line_points_size);
 
 };
 

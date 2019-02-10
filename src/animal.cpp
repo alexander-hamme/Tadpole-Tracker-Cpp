@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "animal.h"
-//#include "CircularQueue.h"
+//#include "CircularBuffer.h"
 
 using namespace std;
 
@@ -25,6 +25,7 @@ void Animal::updateLocation(int _x, int _y, double dt, long time_pos) {
 	applyBounds();
 
 	const double new_pt[3] = {(double) time_pos, (double) x_pos, (double) y_pos};
+
 	data_points.push_back(new_pt);
 
 	Point pt{x_pos, y_pos};
