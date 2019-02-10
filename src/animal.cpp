@@ -5,8 +5,8 @@
 #include <iostream>
 #include <vector>
 
-#include "Animal.hpp"
-//#include "CircularPointsQueue.h"
+#include "animal.h"
+//#include "CircularQueue.h"
 
 using namespace std;
 

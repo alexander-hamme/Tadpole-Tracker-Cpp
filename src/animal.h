@@ -45,6 +45,6 @@ private:
 
 	//vector<double[]> dataPoints;
 
-	//CircularPointsQueue linePoints; //<int[]>
+	//CircularQueue linePoints; //<int[]>
 };
 

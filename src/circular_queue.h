@@ -24,7 +24,26 @@ typedef struct {
  * style traversal from `front` circularly around the array
  * until it reaches `rear`
  */
-class CircularPointsQueue {
+class CircularQueue {
+
+public:
+
+	explicit CircularQueue(int cap)   // initialize vector with capacity
+	: capacity(cap), elements(static_cast<unsigned int>(cap)) {};
+
+	bool add(Point pt);
+
+	int getFront();
+	int getRear();
+	int getSize();
+
+	bool isAtCapacity();
+	bool isEmpty();
+
+	vector<Point> getElements();
+
+	void printPoints();
+
 
 private:
 
@@ -40,23 +59,6 @@ private:
 
 	int rear = capacity-1;   // rear stays at first insertion until queue reaches full capacity
 
-	bool atCapacity = false;
+	bool at_capacity = false;
 
-public:
-
-	explicit CircularPointsQueue(int cap)   // initialize vector with capacity
-	: capacity(cap), elements(static_cast<unsigned int>(cap)) {};
-
-	bool add(Point pt);
-
-	int getFront();
-	int getRear();
-	int getSize();
-
-	bool isAtCapacity();
-	bool isEmpty();
-
-	vector<Point> getElements();
-
-	void printPoints();
 };

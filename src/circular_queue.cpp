@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <vector>
-#include "CircularPointsQueue.hpp"
+#include "circular_queue.h"
 
 using namespace std;
 
@@ -14,14 +14,14 @@ using namespace std;
  * the least recently added element is discarded
  * so that a new element can be inserted.
  */
-bool CircularPointsQueue::add(Point pt) {
+bool CircularQueue::add(Point pt) {
 
 	//cout << boost::format("%d") % front;
 	//printf("Front is %d", front);
 
 	if (front == 0) {
 
-		atCapacity = true;  // this stays true once queue reaches capacity for the first time,
+		at_capacity = true;  // this stays true once queue reaches capacity for the first time,
 							// because deleting or popping elements from the line points queue is not supported
 
 		front = capacity - 1;
@@ -31,7 +31,7 @@ bool CircularPointsQueue::add(Point pt) {
 
 		front--;
 
-		if (atCapacity) {
+		if (at_capacity) {
 
 			if (rear == 0) {
 
@@ -53,27 +53,27 @@ bool CircularPointsQueue::add(Point pt) {
 	return true;
 }
 
-vector<Point> CircularPointsQueue::getElements() {
+vector<Point> CircularQueue::getElements() {
 	return this->elements;
 }
 
-int CircularPointsQueue::getSize() {
-	return (atCapacity) ? this->capacity : (rear+1 - front);
+int CircularQueue::getSize() {
+	return (at_capacity) ? this->capacity : (rear+1 - front);
 }
 
-bool CircularPointsQueue::isAtCapacity() {
-	return this->atCapacity;
+bool CircularQueue::isAtCapacity() {
+	return this->at_capacity;
 }
 
-bool CircularPointsQueue::isEmpty() {
+bool CircularQueue::isEmpty() {
 	return this->elements.empty();
 }
 
-int CircularPointsQueue::getFront() {
+int CircularQueue::getFront() {
 	return this->front;
 }
 
-int CircularPointsQueue::getRear() {
+int CircularQueue::getRear() {
 	return this->rear;
 }
 
@@ -81,7 +81,7 @@ int CircularPointsQueue::getRear() {
 /*
  * Print out elements in FIFO order
  */
-void CircularPointsQueue::printPoints() {
+void CircularQueue::printPoints() {
 
 	auto idx = static_cast<unsigned int>(front);
 
@@ -90,7 +90,7 @@ void CircularPointsQueue::printPoints() {
 	// if queue is not at capacity, FIFO traversal is simple,
 	// because elements are inserted in reverse order into the array.
 	// Accessing elements in FIFO order is done by incrementing `front` to `rear`
-	if (! atCapacity) {
+	if (! at_capacity) {
 
 		while(idx <= rear) {
 

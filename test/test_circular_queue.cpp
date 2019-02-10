@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "testCircularPointsQueue.hpp"
+#include "test_circular_queue.h"
 
 #include "gtest/gtest.h"
 
@@ -23,7 +23,7 @@ TEST(TEST_Q_ELEMENTS, UnderCapacityCheck) {
 
 	unsigned numbpts = 10;
 
-	auto *pointsQueue = new CircularPointsQueue(numbpts + 5);
+	auto *pointsQueue = new CircularQueue(numbpts + 5);
 
 	vector<Point> truthPoints(numbpts);
 
@@ -48,7 +48,7 @@ TEST(TEST_Q_ELEMENTS, AtCapacityCheck) {
 
 	unsigned numbpts = 10;
 
-	auto *pointsQueue = new CircularPointsQueue(numbpts);
+	auto *pointsQueue = new CircularQueue(numbpts);
 
 	vector<Point> truthPoints(numbpts);
 
@@ -73,7 +73,7 @@ TEST(TEST_Q_ELEMENTS, OverCapacityCheck) {
 
 	unsigned numbpts = 10;
 
-	auto *pointsQueue = new CircularPointsQueue(numbpts);
+	auto *pointsQueue = new CircularQueue(numbpts);
 
 	vector<Point> truthPoints(numbpts);
 
@@ -101,7 +101,7 @@ TEST(TEST_Q_ELEMENTS, OverCapacityCheck) {
  * @param truthPoints vector containing Point structs
  * @return bool
  */
-bool testQueueElements(CircularPointsQueue *queue, vector<Point> truthPoints) {
+bool testQueueElements(CircularQueue *queue, vector<Point> truthPoints) {
 
 	if (queue->getSize() != truthPoints.size()) {
 
