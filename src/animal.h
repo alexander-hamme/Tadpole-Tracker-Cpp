@@ -4,47 +4,67 @@
 
 #ifndef SPROJ_C_ANIMAL_H
 #define SPROJ_C_ANIMAL_H
-#endif //SPROJ_C_ANIMAL_H
-
-#define DEBUG 1
-
-// this should be high enough to not be a minimum value in a row or col,
-// but not high enough that it's worse than giving an assignment a value across the screen
-#define DEFAULT_COST_OF_NON_ASSIGNMENT 30.0
-
-#define LINE_THICKNESS 2
-#define CIRCLE_RADIUS 15
-#define LINE_POINTS_SIZE = 64
-
-#define DATA_BUFFER_ARRAY_SIZE = 60
+#endif
 
 #include <iostream>
+#include "util/circular_queue.h"
+
 
 using namespace std;
 
+
+/**
+ * Class used to record the motion data of individual
+ * subject animals during tracking
+ */
 class Animal {
 
 public:
 
-	Animal(int _x, int _y, int pos_bounds[4], int clr[3]);
+	Animal(int x, int y, int pos_bounds[4], int clr[3]);
+
+	void updateLocation(int _x, int _y, double dt, long time_pos);
+
+	int *getColor();
+
+	int getX() {return this->x_pos;}
+	int getY() {return this->y_pos;}
+
+	double getCurrCost();
+
+	void setCurrCost(const double val);
 
 	string toString();
 
-	void updateLocation(int _x, int _y, double dt, long timePos);
-
 private:
 
-	int x, y;
+	// this should be high enough to not be a minimum value in a row or col,
+	// but not high enough that it's worse than giving an assignment a value across the screen
+	const double default_cost_non_assignment = 30.0;
 
-	int color[3];
-	int position_bounds[4];
+	const size_t line_thickness = 2;
+	const size_t circle_radius = 15;
+	const size_t data_array_size = 60;
+	const int line_points_size = 64;
+
+	int x_pos, y_pos;
+	double vx, vy;
+
+	int* color;
+
+	int* position_bounds;  // x1  x2  y1  y2
+
+	double curr_cost_non_assignment;
 
 	void applyBounds();
 
-	void updateVelocity(double dt);
+	void updateVelocity(double dt, int frame_numb);
 
-	//vector<double[]> dataPoints;
+	void clearPoints();
 
-	//CircularQueue linePoints; //<int[]>
+	vector<double[3]> data_points;
+
+	CircularQueue line_points_q = CircularQueue(line_points_size);
+
 };
 

@@ -7,7 +7,7 @@
 
 #endif //SPROJ_CPP_TEST_H
 
-#include "../src/circular_queue.h"
+#include "../src/util/circular_queue.h"
 
 bool testQueueElements(CircularQueue *queue, vector<Point> truthPoints);
 

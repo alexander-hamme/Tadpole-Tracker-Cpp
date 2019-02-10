@@ -31,7 +31,7 @@ public:
 	explicit CircularQueue(int cap)   // initialize vector with capacity
 	: capacity(cap), elements(static_cast<unsigned int>(cap)) {};
 
-	bool add(Point pt);
+	void add(Point pt);
 
 	int getFront();
 	int getRear();

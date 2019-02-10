@@ -14,7 +14,7 @@ using namespace std;
  * the least recently added element is discarded
  * so that a new element can be inserted.
  */
-bool CircularQueue::add(Point pt) {
+void CircularQueue::add(Point pt) {
 
 	//cout << boost::format("%d") % front;
 	//printf("Front is %d", front);
@@ -49,8 +49,7 @@ bool CircularQueue::add(Point pt) {
 	// at() has automatic bounds checking, as opposed to using the [] operator
 	elements.at(static_cast<unsigned int>(front)) = pt;
 
-	// todo check for success
-	return true;
+	// todo check for success?
 }
 
 vector<Point> CircularQueue::getElements() {
