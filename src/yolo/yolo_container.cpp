@@ -4,94 +4,154 @@
 
 #include "yolo_container.h"
 
+// Brief Sample of using OpenCV dnn module in real time with device capture, video and image.
+// VIDEO DEMO: https://www.youtube.com/watch?v=NHtRlndE2cg
+#include <opencv2/dnn/dnn.hpp>
+#include <opencv2/dnn/shape_utils.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+#include <fstream>
+#include <iostream>
 
 
-int main() {
-
-
-
-
-
-
-
-	/*list* lst = read_data_cfg(const_cast<char*>("data/obj.data"));
-
-	char* data_cfg = const_cast<char*>("data/obj.data");
-	char* cfg = const_cast<char*>("data/yolo-obj.cfg");
-	char* weights = const_cast<char*>("data/yolo-obj_19000.weights");
-
-	char* test_image = const_cast<char*>("data/test_image.png");
-	char* image_save_path = const_cast<char*>("data/image.jpg");
-
-	test_detector(data_cfg, cfg, weights, test_image, 0.5, 0.5, image_save_path, 0);*/
-
-}
-
-
-/*
-void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filename, float thresh, float hier_thresh, char *outfile, int fullscreen) {
-		list *options = read_data_cfg(datacfg);
-		char *name_list = const_cast<char*>("data/obj.names");//option_find_str(options, "names", "data/names.list");
-		char **names = get_labels(name_list);
-
-		image **alphabet = load_alphabet();
-		network *net = load_network(cfgfile, weightfile, 0);
-		set_batch_network(net, 1);
-		srand(2222222);
-		double time;
-		char buff[256];
-		char *input = buff;
-		float nms=.45;
-
-		bool do_nms = true;
-
-		while(1){
-			if(filename){
-				strncpy(input, filename, 256);
-			} else {
-				printf("Enter Image Path: ");
-				fflush(stdout);
-				input = fgets(input, 256, stdin);
-				if(!input) return;
-				strtok(input, "\n");
-			}
-			image im = load_image_color(input,0,0);
-			image sized = letterbox_image(im, net->w, net->h);
-			//image sized = resize_image(im, net->w, net->h);
-			//image sized2 = resize_max(im, net->w);
-			//image sized = crop_image(sized2, -((net->w - sized2.w)/2), -((net->h - sized2.h)/2), net->w, net->h);
-			//resize_network(net, sized.w, sized.h);
-			layer l = net->layers[net->n-1];
-
-
-			float *X = sized.data;
-			time=what_time_is_it_now();
-			network_predict(net, X);
-			printf("%s: Predicted in %f seconds.\n", input, what_time_is_it_now()-time);
-			int nboxes = 0;
-			detection *dets = get_network_boxes(net, im.w, im.h, thresh, hier_thresh, 0, 1, &nboxes);
-			//printf("%d\n", nboxes);
-			//if (nms) do_nms_obj(boxes, probs, l.w*l.h*l.n, l.classes, nms);
-
-			if (do_nms) {
-				do_nms_sort(dets, nboxes, l.classes, nms);
-			}
-
-			draw_detections(im, dets, nboxes, thresh, names, alphabet, l.classes);
-			free_detections(dets, nboxes);
-
-			if(outfile){
-				save_image(im, outfile);
-			}
-			else{
-				save_image(im, "predictions");
-#ifdef OPENCV
-			make_window("predictions", 512, 512, 0);
-            show_image(im, "predictions", 0);
-#endif
-			}
-			free_image(im);
-			free_image(sized);
-			if (filename) break;
+using namespace std;
+using namespace cv;
+using namespace cv::dnn;
+static const char* about =
+		"This sample uses You only look once (YOLO)-Detector (https://arxiv.org/abs/1612.08242) to detect objects on camera/video/image.\n"
+		"Models can be downloaded here: https://pjreddie.com/darknet/yolo/\n"
+		"Default network is 416x416.\n"
+		"Class names can be downloaded here: https://github.com/pjreddie/darknet/tree/master/data\n";
+static const char* params =
+		"{ help           | false | print usage         }"
+		"{ cfg            |       | model configuration }"
+		"{ model          |       | model weights       }"
+		"{ camera_device  | 0     | camera device number}"
+		"{ source         |       | video or image for detection}"
+		"{ out            |       | path to output video file}"
+		"{ fps            | 3     | frame per second }"
+		"{ style          | box   | box or line style draw }"
+		"{ min_confidence | 0.24  | min confidence      }"
+		"{ class_names    |       | File with class names, [PATH-TO-DARKNET]/data/coco.names }";
+int main(int argc, char** argv)
+{
+	CommandLineParser parser(argc, argv, params);
+	if (parser.get<bool>("help"))
+	{
+		cout << about << endl;
+		parser.printMessage();
+		return 0;
+	}
+	String modelConfiguration = parser.get<String>("cfg");
+	String modelBinary = parser.get<String>("model");
+	dnn::Net net = readNetFromDarknet(modelConfiguration, modelBinary);
+	if (net.empty())
+	{
+		cerr << "Can't load network by using the following files: " << endl;
+		cerr << "cfg-file:     " << modelConfiguration << endl;
+		cerr << "weights-file: " << modelBinary << endl;
+		cerr << "Models can be downloaded here:" << endl;
+		cerr << "https://pjreddie.com/darknet/yolo/" << endl;
+		exit(-1);
+	}
+	VideoCapture cap;
+	VideoWriter writer;
+	int codec = CV_FOURCC('M', 'J', 'P', 'G');
+	double fps = parser.get<float>("fps");
+	if (parser.get<String>("source").empty())
+	{
+		int cameraDevice = parser.get<int>("camera_device");
+		cap = VideoCapture(cameraDevice);
+		if(!cap.isOpened())
+		{
+			cout << "Couldn't find camera: " << cameraDevice << endl;
+			return -1;
 		}
-}*/
+	}
+	else
+	{
+		cap.open(parser.get<String>("source"));
+		if(!cap.isOpened())
+		{
+			cout << "Couldn't open image or video: " << parser.get<String>("video") << endl;
+			return -1;
+		}
+	}
+	if(!parser.get<String>("out").empty())
+	{
+		writer.open(parser.get<String>("out"), codec, fps, Size((int)cap.get(CAP_PROP_FRAME_WIDTH),(int)cap.get(CAP_PROP_FRAME_HEIGHT)), 1);
+	}
+	vector<String> classNamesVec;
+	ifstream classNamesFile(parser.get<String>("class_names").c_str());
+	if (classNamesFile.is_open())
+	{
+		string className = "";
+		while (std::getline(classNamesFile, className))
+			classNamesVec.emplace_back(className);
+	}
+	String object_roi_style = parser.get<String>("style");
+	for(;;)
+	{
+		Mat frame;
+		cap >> frame; // get a new frame from camera/video or read image
+		if (frame.empty())
+		{
+			waitKey();
+			break;
+		}
+		if (frame.channels() == 4)
+			cvtColor(frame, frame, COLOR_BGRA2BGR);
+		Mat inputBlob = blobFromImage(frame, 1 / 255.F, Size(416, 416), Scalar(), true, false); //Convert Mat to batch of images
+		net.setInput(inputBlob, "data");                   //set the network input
+		Mat detectionMat = net.forward("detection_out");   //compute output
+		vector<double> layersTimings;
+		double tick_freq = getTickFrequency();
+		double time_ms = net.getPerfProfile(layersTimings) / tick_freq * 1000;
+		putText(frame, format("FPS: %.2f ; time: %.2f ms", 1000.f / time_ms, time_ms),
+		        Point(20, 20), 0, 0.5, Scalar(0, 0, 255));
+		float confidenceThreshold = parser.get<float>("min_confidence");
+		for (int i = 0; i < detectionMat.rows; i++)
+		{
+			const int probability_index = 5;
+			const int probability_size = detectionMat.cols - probability_index;
+			float *prob_array_ptr = &detectionMat.at<float>(i, probability_index);
+			size_t objectClass = max_element(prob_array_ptr, prob_array_ptr + probability_size) - prob_array_ptr;
+			float confidence = detectionMat.at<float>(i, (int)objectClass + probability_index);
+			if (confidence > confidenceThreshold)
+			{
+				float x_center = detectionMat.at<float>(i, 0) * frame.cols;
+				float y_center = detectionMat.at<float>(i, 1) * frame.rows;
+				float width = detectionMat.at<float>(i, 2) * frame.cols;
+				float height = detectionMat.at<float>(i, 3) * frame.rows;
+				Point p1(cvRound(x_center - width / 2), cvRound(y_center - height / 2));
+				Point p2(cvRound(x_center + width / 2), cvRound(y_center + height / 2));
+				Rect object(p1, p2);
+				Scalar object_roi_color(0, 255, 0);
+				if (object_roi_style == "box")
+				{
+					rectangle(frame, object, object_roi_color);
+				}
+				else
+				{
+					Point p_center(cvRound(x_center), cvRound(y_center));
+					line(frame, object.tl(), p_center, object_roi_color, 1);
+				}
+				String className = objectClass < classNamesVec.size() ? classNamesVec[objectClass] : cv::format("unknown(%d)", objectClass);
+				String label = format("%s: %.2f", className.c_str(), confidence);
+				int baseLine = 0;
+				Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
+				rectangle(frame, Rect(p1, Size(labelSize.width, labelSize.height + baseLine)),
+				          object_roi_color, FILLED);
+				putText(frame, label, p1 + Point(0, labelSize.height),
+				        FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,0,0));
+			}
+		}
+		if(writer.isOpened())
+		{
+			writer.write(frame);
+		}
+		imshow("YOLO: Detections", frame);
+		if (waitKey(1) >= 0) break;
+	}
+	return 0;
+} // main
