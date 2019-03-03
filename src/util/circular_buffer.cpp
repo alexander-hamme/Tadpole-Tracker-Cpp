@@ -21,7 +21,7 @@ using namespace std;
  *
  * Using a cyclic buffer instead of a normal vector allows the same memory
  * block to be reused for the duration of the tracker system's runtime,
- * reducing the amount of work garbage collection has to do at each timstep.
+ * which means that that memory does not need to be freed within each timstep.
  *
  * The points are accessed in First In First Out (FIFO) order
  * by traversing from `front` circularly around the array
