@@ -20,8 +20,7 @@ using namespace std;
  * Animal class receives its own CircularBuffer instance to store its trajectory.
  *
  * Using a cyclic buffer instead of a normal vector allows the same memory
- * block to be reused for the duration of the tracker system's runtime,
- * which means that that memory does not need to be freed within each timstep.
+ * block to be reused for the duration of the tracker system's runtime.
  *
  * The points are accessed in First In First Out (FIFO) order
  * by traversing from `front` circularly around the array
